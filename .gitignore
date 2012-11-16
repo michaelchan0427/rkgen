@@ -2,3 +2,5 @@
 rkgen/target/classes/log4j.properties
 
 *.class
+
+.DS_Store
