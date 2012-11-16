@@ -1,2 +1,4 @@
 
 rkgen/target/classes/log4j.properties
+
+*.class
