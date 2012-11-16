@@ -30,6 +30,11 @@ import org.apache.velocity.util.StringUtils;
 
 import com.rkgen.jsontorestkitgenerator.exception.RKCodeGenException;
 
+/**
+ * Main class in RKGen
+ * @author mhc
+ *
+ */
 public class RKCodeGen {
 
     private static Logger logger = Logger.getLogger("RKCodeGen");
