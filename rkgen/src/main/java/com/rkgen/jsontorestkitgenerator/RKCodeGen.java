@@ -44,12 +44,14 @@ public class RKCodeGen {
     private static final String OBJECT_IMPLEMENTATION_TEMPLATE_NAME = "implementationtemplate.vm";
     
     private static final String MAPPER_HEADER_TEMPLATE_NAME = "mapperHeaderTemplate.vm";
+    
+    private static final String MAPPER_IMPLEMENTATION_TEMPLATE_NAME = "mapperImplementationTemplate.vm";
 
     private static final String DOT_H = ".h";
 
     private static final String DOT_M = ".m";
     
-    private static final String MAPPER_FILE_SUFFIX = "Mapper";
+    private static final String MAPPER_CLASS_SUFFIX = "Mapper";
 
     private Properties prop = new Properties();
 
@@ -110,6 +112,8 @@ public class RKCodeGen {
         
         Template mapperHeaderTemplate = null;
         
+        Template mapperImplementationTemplate = null;
+        
         objectHeaderTemplate = getTemplate(OBJECT_HEADER_TEMPLATE_NAME);
 
         if (objectHeaderTemplate == null) {
@@ -126,6 +130,12 @@ public class RKCodeGen {
 
         if (mapperHeaderTemplate == null) {
             throw new RKCodeGenException("Cannot initialize template for generating mapper header");
+        }
+        
+        mapperImplementationTemplate = getTemplate(MAPPER_IMPLEMENTATION_TEMPLATE_NAME);
+
+        if (mapperImplementationTemplate == null) {
+            throw new RKCodeGenException("Cannot initialize template for generating mapper implementation");
         }
         
         logger.info("Loading restricted keyword file from: " + restrictedKeywordsFile);
@@ -193,6 +203,7 @@ public class RKCodeGen {
             }
             
             generateMapperHeaderFiles(rkObjects);
+            generateMapperImplementationFiles(rkObjects);
             
         } catch (IOException ioe){
             ioe.printStackTrace();
@@ -201,7 +212,7 @@ public class RKCodeGen {
         
     }
 
-    private void buildRKObjects(MorphDynaBean bean, String objectTypeName) {
+    private void buildRKObjects(MorphDynaBean bean, String propertyName) {
 
         MorphDynaClass theClass = (MorphDynaClass) bean.getDynaClass();
 
@@ -210,20 +221,30 @@ public class RKCodeGen {
         RKObject rkObject = new RKObject();
 
         //loose the trailing "S"
-        objectTypeName = org.apache.commons.lang.StringUtils.removeEndIgnoreCase(objectTypeName, "s");
+        propertyName = org.apache.commons.lang.StringUtils.removeEndIgnoreCase(propertyName, "s");
         
-        rkObject.setClassName(getClassName(objectTypeName));
-
+        rkObject.setClassName(getClassName(propertyName));
+        rkObject.setMapperName(getMapperName(propertyName));
+        
+        
         for (DynaProperty prop : props) {
+            
+            String generatedPropertyName = processRestrictedKeywords(propertyName, prop.getName());
+            
+            rkObject.getAttributeOriginalNames().put(generatedPropertyName, prop.getName());
+            
             //Property is an array
             if (prop.getType().equals(List.class)) {
 
                 List theList = (List) bean.get(prop.getName());
-
-                rkObject.getAttributes().put(processRestrictedKeywords(objectTypeName, prop.getName()), getMappedPropertyType("array"));
-
-                String newObjectTypeName = prop.getName();
-
+                
+                rkObject.getAttributes().put(generatedPropertyName, getMappedPropertyType("array"));
+                
+                rkObject.getRelationShipAttributes().put(generatedPropertyName, getMapperName(prop.getName()));
+                
+                String newObjectTypeName = org.apache.commons.lang.StringUtils.removeEndIgnoreCase(prop.getName(), "s");
+                
+                
                 if (!theList.isEmpty()) {
 
                     MorphDynaBean newBean = (MorphDynaBean) (theList.iterator().next());
@@ -232,6 +253,7 @@ public class RKCodeGen {
                     // directly adds an empty RKObject
                     RKObject emptyObject = new RKObject();
                     emptyObject.setClassName(getClassName(newObjectTypeName));
+                    emptyObject.setMapperName(lowerCaseFirstLetter(emptyObject.getClassName()) + MAPPER_CLASS_SUFFIX);
                     this.rkObjects.add(emptyObject);
                 }
                 
@@ -241,17 +263,18 @@ public class RKCodeGen {
             else if (prop.getType().equals(Object.class)){
                 
                 MorphDynaBean newBean = (MorphDynaBean)bean.get(prop.getName());
-                rkObject.getAttributes().put(processRestrictedKeywords(objectTypeName,  prop.getName()), getClassName(prop.getName()));
-                rkObject.getImportLines().add(processRestrictedKeywords(objectTypeName,  getClassName(prop.getName())));
+                rkObject.getAttributes().put(generatedPropertyName, getClassName(prop.getName()));
+                rkObject.getRelationShipAttributes().put(generatedPropertyName,getMapperName(prop.getName()));
+                rkObject.getImportLines().add(processRestrictedKeywords(propertyName,  getClassName(prop.getName())));
                 buildRKObjects(newBean, prop.getName());
                 
             } 
             
-            //Property is "primitive"
+            //Property is other types, could be primitive or something else
             else {
 
-                String propertyPath = objectTypeName + "." + prop.getName();
-                rkObject.getAttributes().put(processRestrictedKeywords(objectTypeName, prop.getName()), getMappedPropertyType(propertyPath));
+                String propertyPath = propertyName + "." + prop.getName();
+                rkObject.getAttributes().put(generatedPropertyName, getMappedPropertyType(propertyPath));
             }
         }
         this.rkObjects.add(rkObject);
@@ -308,7 +331,7 @@ public class RKCodeGen {
 
         context.put("rkObjects", rkObjects);
         context.put("fileName", outputFileName);
-        context.put("mapperName", getClassName(rootObjectName) + MAPPER_FILE_SUFFIX);
+        context.put("mapperName", getClassName(rootObjectName) + MAPPER_CLASS_SUFFIX);
         Template template = getTemplate(templateName);
         
         
@@ -324,9 +347,16 @@ public class RKCodeGen {
     
     private void generateMapperHeaderFiles(List<RKObject> rkObjects) throws IOException {
 
-        String outputFileName = getClassName(rootObjectName) + MAPPER_FILE_SUFFIX + DOT_H;
+        String outputFileName = getClassName(rootObjectName) + MAPPER_CLASS_SUFFIX + DOT_H;
         
         generateMapperFiles(rkObjects, MAPPER_HEADER_TEMPLATE_NAME, outputFileName);
+    }
+    
+    private void generateMapperImplementationFiles(List<RKObject> rkObjects) throws IOException {
+
+        String outputFileName = getClassName(rootObjectName) + MAPPER_CLASS_SUFFIX + DOT_M;
+        
+        generateMapperFiles(rkObjects, MAPPER_IMPLEMENTATION_TEMPLATE_NAME, outputFileName);
     }
 
     private String processRestrictedKeywords(String objectName, String input) {
@@ -377,6 +407,26 @@ public class RKCodeGen {
             
             return className;
         }
+        
+    }
+    
+    private String lowerCaseFirstLetter(String str){
+        
+        char firstLetter = str.charAt(0);
+        
+        String result = str.substring(1);
+        
+        
+        return org.apache.commons.lang.StringUtils.lowerCase(firstLetter+"") + result;
+        
+    }
+    
+    private String getMapperName (String propertyName){
+        
+        String thePropertyName = org.apache.commons.lang.StringUtils.removeEndIgnoreCase(propertyName, "s");
+        
+        String className = getClassName(thePropertyName);
+        return lowerCaseFirstLetter(className) + MAPPER_CLASS_SUFFIX;
         
     }
 
