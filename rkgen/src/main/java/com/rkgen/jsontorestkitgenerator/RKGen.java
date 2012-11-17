@@ -18,7 +18,7 @@ public class RKGen {
 	public static void main(String[] args) throws Exception{
 		
 	    if (args.length < 6) {
-	        logger.error("Usage: java -jar RKCodeGen.jar " +
+	        System.out.println("Usage: java -jar RKGen-version.number.jar " +
 	        		"[json file path / URL] " +
 	        		"[output path] " +
 	        		"[root object name] " +
@@ -26,7 +26,7 @@ public class RKGen {
 	        		"[attribute type mapping file] " +
 	        		"[restricted keywords file] " +
 	        		"[Class prefix](optional)" );
-	        
+	        return;
 	    }
 	    String classPrefix = null;
 	    if (args.length == 7){

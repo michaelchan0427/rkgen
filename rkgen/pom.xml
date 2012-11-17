@@ -3,16 +3,16 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rkgen</groupId>
-	<artifactId>jsontorestkitgenerator</artifactId>
+	<artifactId>RKGen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<!-- TODO project name -->
 	<name>JSON to Objective-C class generator for RestKit</name>
 	<description></description>
 
 	<organization>
 		<name>Michael Chan</name>
-		<url>company url</url>
+		<url>https://github.com/michaelchan0427/rkgen</url>
 	</organization>
 
 
@@ -101,6 +101,30 @@
 				</excludes>
 			</testResource>
 		</testResources>
+		<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<executions>
+				<execution>
+					<goals>
+						<goal>attached</goal>
+					</goals>
+					<phase>package</phase>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>com.rkgen.jsontorestkitgenerator.RKGen</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+    	</plugins>
 	</build>
 
 	<properties>
