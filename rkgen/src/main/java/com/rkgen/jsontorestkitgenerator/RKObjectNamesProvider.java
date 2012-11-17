@@ -65,11 +65,17 @@ public class RKObjectNamesProvider {
         }
     }
 
-    //This need re-implementing, logic of typename + propertyName should be inside this method
     public String getPropertyTypeName (String jsonObjectName, String propertyName) {
         
-        String result = prop.getProperty(jsonObjectName + RKGenConstants.DOT + propertyName);
-
+        String result = null;
+        
+        if (jsonObjectName == null){
+            result = prop.getProperty(propertyName);
+        } else {
+            result = prop.getProperty(jsonObjectName + RKGenConstants.DOT + propertyName);
+        }
+                
+        
         if (result == null) {
             result = prop.getProperty(RKGenConstants.DEFAULT_PROPERTY_KEY);
         }

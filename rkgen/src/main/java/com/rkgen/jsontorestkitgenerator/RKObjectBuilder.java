@@ -56,7 +56,7 @@ public class RKObjectBuilder {
 
                 List theList = (List) morphDynaBean.get(prop.getName());
                 
-                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(jsonObjectName, RKGenConstants.ARRAY_PROPERTY_KEY));
+                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(null, RKGenConstants.ARRAY_PROPERTY_KEY));
                 
                 //Gets the Mapper name of the target object on the other end of the relationship.
                 rkObject.getRelationShipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
@@ -80,7 +80,8 @@ public class RKObjectBuilder {
             else if (prop.getType().equals(Object.class)){
                 
                 MorphDynaBean newBean = (MorphDynaBean)morphDynaBean.get(prop.getName());
-                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(jsonObjectName, prop.getName()));
+                //Property type is the classname in this case, therefore, don't need to invoke namesProvider.getPropertyTypeName
+                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getClassName(prop.getName()));
                 rkObject.getRelationShipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
                 rkObject.getImportLines().add(namesProvider.getClassName(prop.getName()));
                 buildRKObjects(newBean, prop.getName());
@@ -90,8 +91,7 @@ public class RKObjectBuilder {
             //Property is other types, could be primitive or something else
             else {
 
-                String propertyPath = jsonObjectName + "." + prop.getName();
-                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(jsonObjectName, propertyPath));
+                rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(jsonObjectName, prop.getName()));
             }
         }
         this.rkObjects.add(rkObject);
