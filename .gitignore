@@ -8,3 +8,21 @@ rkgen/target/classes/log4j.properties
 *.h
 
 *.m
+
+rkgen/target/RKGen-0.0.1-jar-with-dependencies.jar
+
+rkgen/target/RKGen-0.0.1.jar
+
+rkgen/target/jsontorestkitgenerator-0.0.1.jar
+
+rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT.zip
+
+rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/META-INF/MANIFEST.MF
+
+rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/META-INF/maven/com.rkgen/jsontorestkitgenerator/pom.properties
+
+rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/META-INF/maven/com.rkgen/jsontorestkitgenerator/pom.xml
+
+rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/log4j.properties
+
+rkgen/target/jsontorestkitgenerator-0.0.1-jar-with-dependencies.jar
