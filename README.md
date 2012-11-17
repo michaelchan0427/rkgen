@@ -36,7 +36,8 @@ Basically, RKGen parses JSON from either a file or HTTP response using
 then renders Objective-C headers and methods files with [Velocity
 Templates](http://velocity.apache.org/).
 
-Currently RKGen uses the following rules to generate Objective-c classes:
+RKGen concepts
+--------------
 
 ### Root object name
 
@@ -60,9 +61,69 @@ record:
 	}
 
 
-RKGen knows that there are two objects, "address" and "phoneNumber" in the
+RKGen knows that there are two objects, "address" and an array of "phoneNumber" in the
 JSON file, but there is no way for RKGen to determine the name of the object
 which holds the relationship to address and phoneNumber. By providing RKGen
 with a "root object name" of UserRecord, it can generate a UserRecord class
 with relationship to an Address class and a PhoneNumber class.
+
+### What does RKGen generate?
+
+RKGen generates four types of files, each having its own template:
+
+* headertemplate.vm - Template for object header files (".h")
+* implementationtemplate.vm - Template for object method files (".m")
+* mapperHearderTemplate.vm - Template for header of the mapping containing the mapping of JSON objects to Objective-C objects.
+* mapperImplementationTemplate.vm - Template for the method files including the actual implementation of the mappings.
+
+In the generated Objective-c code, each of the JSON object will have its own .h and .m files, and one mapping class, named according to the root object name.
+
+It is very important to understand [Velocity syntax](http://velocity.apache.org/) should you wish to change the templates, which are available under the bin/templates directory. 
+
+
+### Class / attribute naming rule
+
+RKGen uses a simple approach to generate Objective-c classes, it simply reads the object name, capitalise the first letter and remove 's' if it is the last letter. e.g.:
+
+	{
+		"team":{
+			"name": "The A-Team",
+			"country":"United States"
+		},
+		"members":
+		[
+			{
+				"name":"Foo",
+				"email":"foo@bar.com"
+			},
+			{
+				"name":"Bar",
+				"email":"Bar@foo.com"
+			}
+		]
+	}
+
+In the example above, if the root object name is TeamRecord, then RKGen will generate the following classes:
+
+* TeamRecord
+* Member
+* Team
+* TeamRecordMapper
+
+And if a class prefix is provided, e.g. RK, then the generated class name becomes:
+
+* RKTeamRecord
+* RKMember
+* RKTeam
+* RKTeamRecordMapper
+
+However at the time of writing, I just realized that there is a limitation to the approach, if we have an address object, then the generated class would be Addres. This will be addressed in the next release.
+
+### Restricted keywords
+
+Just like other programming languages, a number of keywords are reserved and cannot be used as Class / property name. RKGen simply utilise the restrictedKeywords file under the bin/conf directory to determine the words to avoid. Again, at the time of writing, I found another bug, the restrictions is only applied to property name but not class name...
+
+### Type mapping
+
+...
 
