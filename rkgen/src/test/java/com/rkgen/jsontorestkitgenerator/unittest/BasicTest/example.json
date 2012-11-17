@@ -1,0 +1,29 @@
+{
+  "catalogs": [
+    {
+      "id": "electronicsProductCatalog",
+      "lastModified": "2012-08-25T11:04:07+01:00",
+      "name": "Electronics Product Catalog",
+      "url": "/electronicsProductCatalog",
+      "user": {
+      
+      	"name": "dasfasdf",
+      	"password" : "pass"
+      },
+      "catalogVersions": [
+        {
+          "id": "Staged",
+          "lastModified": "2012-08-25T11:05:33+01:00",
+          "url": "/electronicsProductCatalog/Staged",
+          "categoriesHierarchyData": []
+        },
+        {
+          "id": "Online",
+          "lastModified": "2012-08-31T15:57:34+01:00",
+          "url": "/electronicsProductCatalog/Online",
+          "categoriesHierarchyData": []
+        }
+      ]
+    }
+  ]
+}
