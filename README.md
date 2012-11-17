@@ -40,7 +40,10 @@ Currently RKGen uses the following rules to generate Objective-c classes:
 
 ### Root object name
 
-A "root object name" must be provided, this is because JSON does not require a name for the "root", for example, consider the following JSON for a user record:
+A "root object name" must be provided, this is because JSON does not require a
+name for the "root", for example, consider the following JSON for a user
+record:
+
 
 	{
 		"address":{
@@ -56,4 +59,10 @@ A "root object name" must be provided, this is because JSON does not require a n
 		]
 	}
 
-RKGen knows the content of the JSON, but there is no way for RKGen to determine WHAT sort of data that is. By providing RKGen with a "root object name" of UserRecord, it can generate a UserRecord class with relationship to an Address class and a PhoneNumber class.
+
+RKGen knows that there are two objects, "address" and "phoneNumber" in the
+JSON file, but there is no way for RKGen to determine the name of the object
+which holds the relationship to address and phoneNumber. By providing RKGen
+with a "root object name" of UserRecord, it can generate a UserRecord class
+with relationship to an Address class and a PhoneNumber class.
+
