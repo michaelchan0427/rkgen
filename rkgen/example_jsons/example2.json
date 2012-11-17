@@ -1,0 +1,17 @@
+{
+	"team":{
+		"name": "The A-Team",
+		"country":"United States"
+	},
+	"members":
+	[
+		{
+			"name":"Foo",
+			"email":"foo@bar.com"
+		},
+		{
+			"name":"Bar",
+			"email":"Bar@foo.com"
+		}
+	]
+}
