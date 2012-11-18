@@ -1,32 +1,17 @@
 package com.rkgen.jsontorestkitgenerator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import net.sf.ezmorph.bean.MorphDynaBean;
-import net.sf.ezmorph.bean.MorphDynaClass;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.util.StringUtils;
 
 import com.rkgen.jsontorestkitgenerator.exception.RKCodeGenException;
 
@@ -45,6 +30,25 @@ public class RKCodeGen {
     
     private String rootObjectName = null;
     
+    
+    /**
+     * Constructor of RKCodeGen, initialize all the required objects required to generate the objective-c files
+     * 
+     * @param templatePath
+     *          The velocity template path
+     * @param attributePropFile
+     *          Absolute path to the property to property type mapping properties file
+     * @param restrictedKeywordsFile
+     *          Absolute path to the restricted keyword file
+     * @param outputPath
+     *          The output path
+     * @param rootObjectName
+     *          Root object name
+     * @param classPrefix
+     *          Prefix of the generated class
+     * @throws RKCodeGenException
+     *          If any of the parameters is not valid or not pointing to the right files / directory
+     */
     public RKCodeGen(String templatePath, String attributePropFile, String restrictedKeywordsFile, String outputPath, String rootObjectName, String classPrefix) throws RKCodeGenException {
         logger.info("Initializing RKCodeGen...");
         
@@ -64,7 +68,6 @@ public class RKCodeGen {
         try {
             namesProvider = new RKObjectNamesProvider(attributePropFile, restrictedKeywordsFile, classPrefix);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             throw new RKCodeGenException(e.getMessage());
         }
@@ -93,6 +96,11 @@ public class RKCodeGen {
 
     }
 
+    /**
+     * Invoke this method to generate Objective-C code from the {@link InputStream}
+     * @param stream
+     * @throws RKCodeGenException
+     */
     public void generateCode(InputStream stream) throws RKCodeGenException {
         
         MorphDynaBean bean = convertInputStreamToMorphDynaBean(stream);
@@ -107,6 +115,17 @@ public class RKCodeGen {
         
     }
     
+    
+    /**
+     * Converts the JSON {@link InputStream} to a {@link MorphDynaBean}
+     * 
+     * @param inputStream
+     *      InputStream containing the JSON to generate
+     * @return
+     *      The {@link MorphDynaBean} created according to the body of JSON
+     * @throws RKCodeGenException
+     *      For any error reading / parsing the JSON file
+     */
     public MorphDynaBean convertInputStreamToMorphDynaBean(InputStream inputStream) throws RKCodeGenException{
 
         MorphDynaBean bean = null;
