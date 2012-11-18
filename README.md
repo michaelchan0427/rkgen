@@ -83,7 +83,7 @@ It is very important to understand [Velocity syntax](http://velocity.apache.org/
 
 ### Class / attribute naming rule
 
-RKGen uses a simple approach to generate Objective-c classes, it simply reads the object name, capitalise the first letter and remove 's' if it is the last letter. e.g.:
+RKGen uses a simple approach to generate Objective-c classes, it simply reads the object name, capitalise the first letter and remove 's' if it is the last letter. (I know this is not optimal, also see the Know Issues section...) e.g.:
 
 	{
 		"team":{
