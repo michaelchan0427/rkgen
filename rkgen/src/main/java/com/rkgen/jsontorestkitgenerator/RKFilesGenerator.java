@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import com.rkgen.jsontorestkitgenerator.RKGenConstants;
+import com.rkgen.jsontorestkitgenerator.RKObject;
+import com.rkgen.jsontorestkitgenerator.RKObjectNamesProvider;
+import com.rkgen.jsontorestkitgenerator.TemplatesProvider;
 import com.rkgen.jsontorestkitgenerator.exception.RKCodeGenException;
 
 public class RKFilesGenerator {
@@ -21,10 +25,28 @@ public class RKFilesGenerator {
     
     private String outputPath;
     
-    public RKFilesGenerator (TemplatesProvider templatesProvider, String outputPath, RKObjectNamesProvider namesProvider){
+    public RKFilesGenerator (TemplatesProvider templatesProvider, String outputPath, RKObjectNamesProvider namesProvider) throws RKCodeGenException{
         this.templatesProvider = templatesProvider;
-        this.outputPath = outputPath;
         this.namesProvider = namesProvider;
+        logger.info("Checking outputPath...");
+        
+        String outputPathCopy = new String(outputPath);
+        
+        File outputPathFile = new File(outputPathCopy);
+        
+        if (!outputPathFile.isDirectory()){
+            throw new RKCodeGenException("Output path must be a directory...");
+        }
+        
+        if (!outputPathFile.isAbsolute()){
+            outputPathCopy = outputPathFile.getAbsolutePath();
+        }
+        
+        if (!outputPathCopy.endsWith(RKGenConstants.FILE_SEPARATOR)){
+            outputPathCopy = outputPathCopy + RKGenConstants.FILE_SEPARATOR;
+        }
+        
+        this.outputPath = outputPathCopy;
     }
     
     public void generateFiles(List<RKObject> rkObjects, String rootObjectName) throws RKCodeGenException{

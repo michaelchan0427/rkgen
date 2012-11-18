@@ -13,6 +13,11 @@ import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import com.rkgen.jsontorestkitgenerator.RKFilesGenerator;
+import com.rkgen.jsontorestkitgenerator.RKObject;
+import com.rkgen.jsontorestkitgenerator.RKObjectBuilder;
+import com.rkgen.jsontorestkitgenerator.RKObjectNamesProvider;
+import com.rkgen.jsontorestkitgenerator.TemplatesProvider;
 import com.rkgen.jsontorestkitgenerator.exception.RKCodeGenException;
 
 /**
@@ -75,18 +80,6 @@ public class RKCodeGen {
         }
         
         objectBuilder = new RKObjectBuilder(namesProvider);
-        
-        logger.info("Checking outputPath...");
-        
-        File outputPathFile = new File(outputPath);
-        
-        if (!outputPathFile.isDirectory()){
-            throw new RKCodeGenException("Output path must be a directory...");
-        }
-        
-        if (!outputPath.endsWith(File.pathSeparator)){
-            outputPath = outputPath + File.pathSeparator;
-        }
         
         logger.info("Initializing Velocity...");
 

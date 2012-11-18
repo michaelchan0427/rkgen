@@ -6,6 +6,8 @@ public class RKGenConstants {
     public static final String DOT_H = ".h";
     public static final String DOT_M = ".m";
     
+    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    
     public static final String MAPPER_CLASS_SUFFIX = "Mapper";
     
     //Template names
