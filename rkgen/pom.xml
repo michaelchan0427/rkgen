@@ -5,7 +5,7 @@
 	<groupId>com.rkgen</groupId>
 	<artifactId>RKGen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.1</version>
 	<!-- TODO project name -->
 	<name>JSON to Objective-C class generator for RestKit</name>
 	<description></description>
