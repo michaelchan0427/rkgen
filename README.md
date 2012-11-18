@@ -157,11 +157,11 @@ RKGen uses the following rules to map json object properties to Objective-C type
 		]
 	}
 
-1. ** One-to-many ** - If the relationship is one-to-many, i.e. the property "members" above, RKGen reads the "array" key in the attributetypes.properties file to populate the Objective-C property type, it is NSMutableArray by default.
+1. **One-to-many** - If the relationship is one-to-many, i.e. the property "members" above, RKGen reads the "array" key in the attributetypes.properties file to populate the Objective-C property type, it is NSMutableArray by default.
 
-1. ** User configured ** - RKGen concatenates the object name with the property name as a key to perform lookup in the attributetypes.properties file to find a mapping, e.g. if we have team.creationTime=NSDate in the properties file, then in the generated Objective-C class for Team, the creationTime property would be of type NSDate. The rule to create the key is the same for nested objects, e.g. teamMatchRecords.win=NSInteger would map the property to NSInteger type.
+1. **User configured** - RKGen concatenates the object name with the property name as a key to perform lookup in the attributetypes.properties file to find a mapping, e.g. if we have team.creationTime=NSDate in the properties file, then in the generated Objective-C class for Team, the creationTime property would be of type NSDate. The rule to create the key is the same for nested objects, e.g. teamMatchRecords.win=NSInteger would map the property to NSInteger type.
 
-1. ** Default ** - After the lookup mentioned above, if there isn't a mapping for the property in the attributetypes.properties file, then it would use the key "default" in the properties file. The file distributed with the binary has the key default maps to NSString.
+1. **Default** - After the lookup mentioned above, if there isn't a mapping for the property in the attributetypes.properties file, then it would use the key "default" in the properties file. The file distributed with the binary has the key default maps to NSString.
 
 ### Mapper generation
 
