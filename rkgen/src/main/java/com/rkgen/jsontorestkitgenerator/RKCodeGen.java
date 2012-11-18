@@ -24,11 +24,15 @@ public class RKCodeGen {
 
     private static Logger logger = Logger.getLogger("RKCodeGen");
 
-    private RKObjectBuilder objectBuilder = null;
+    private RKObjectBuilder objectBuilder;
     
-    private RKFilesGenerator filesGenerator = null;
+    private RKFilesGenerator filesGenerator;
     
-    private String rootObjectName = null;
+    private RKObjectNamesProvider namesProvider;
+    
+    private TemplatesProvider templatesProvider;
+    
+    private String rootObjectName;
     
     
     /**
@@ -63,8 +67,6 @@ public class RKCodeGen {
         logger.info("Using root object name: " + rootObjectName);
         this.rootObjectName = rootObjectName;
         
-        RKObjectNamesProvider namesProvider = null;
-        
         try {
             namesProvider = new RKObjectNamesProvider(attributePropFile, restrictedKeywordsFile, classPrefix);
         } catch (IOException e) {
@@ -82,17 +84,15 @@ public class RKCodeGen {
             throw new RKCodeGenException("Output path must be a directory...");
         }
         
-        if (!outputPath.endsWith("/")){
-            outputPath = outputPath + "/";
+        if (!outputPath.endsWith(File.pathSeparator)){
+            outputPath = outputPath + File.pathSeparator;
         }
         
         logger.info("Initializing Velocity...");
 
-        TemplatesProvider templatesProvider = new TemplatesProvider(templatePath);
+         templatesProvider = new TemplatesProvider(templatePath);
         
         filesGenerator = new RKFilesGenerator(templatesProvider, outputPath, namesProvider);
-       
-        
 
     }
 
@@ -162,6 +162,46 @@ public class RKCodeGen {
         }
 
         return bean;
+    }
+
+    public RKObjectBuilder getObjectBuilder() {
+        return objectBuilder;
+    }
+
+    public void setObjectBuilder(RKObjectBuilder objectBuilder) {
+        this.objectBuilder = objectBuilder;
+    }
+
+    public RKFilesGenerator getFilesGenerator() {
+        return filesGenerator;
+    }
+
+    public void setFilesGenerator(RKFilesGenerator filesGenerator) {
+        this.filesGenerator = filesGenerator;
+    }
+
+    public RKObjectNamesProvider getNamesProvider() {
+        return namesProvider;
+    }
+
+    public void setNamesProvider(RKObjectNamesProvider namesProvider) {
+        this.namesProvider = namesProvider;
+    }
+
+    public TemplatesProvider getTemplatesProvider() {
+        return templatesProvider;
+    }
+
+    public void setTemplatesProvider(TemplatesProvider templatesProvider) {
+        this.templatesProvider = templatesProvider;
+    }
+
+    public String getRootObjectName() {
+        return rootObjectName;
+    }
+
+    public void setRootObjectName(String rootObjectName) {
+        this.rootObjectName = rootObjectName;
     }
     
 }

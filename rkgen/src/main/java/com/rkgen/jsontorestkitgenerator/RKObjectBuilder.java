@@ -59,7 +59,7 @@ public class RKObjectBuilder {
                 rkObject.getAttributes().put(generatedPropertyName, namesProvider.getPropertyTypeName(null, RKGenConstants.ARRAY_PROPERTY_KEY));
                 
                 //Gets the Mapper name of the target object on the other end of the relationship.
-                rkObject.getRelationShipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
+                rkObject.getRelationshipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
                 
                 if (!theList.isEmpty()) {
 
@@ -82,7 +82,7 @@ public class RKObjectBuilder {
                 MorphDynaBean newBean = (MorphDynaBean)morphDynaBean.get(prop.getName());
                 //Property type is the classname in this case, therefore, don't need to invoke namesProvider.getPropertyTypeName
                 rkObject.getAttributes().put(generatedPropertyName, namesProvider.getClassName(prop.getName()));
-                rkObject.getRelationShipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
+                rkObject.getRelationshipAttributes().put(generatedPropertyName, namesProvider.getMapperName(prop.getName()));
                 rkObject.getImportLines().add(namesProvider.getClassName(prop.getName()));
                 buildRKObjects(newBean, prop.getName());
                 

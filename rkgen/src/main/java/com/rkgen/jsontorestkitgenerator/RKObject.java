@@ -82,7 +82,7 @@ public class RKObject {
         this.attributeOriginalNames = attributeOriginalNames;
     }
 
-    public Map<String, String> getRelationShipAttributes() {
+    public Map<String, String> getRelationshipAttributes() {
         return relationShipAttributes;
     }
 
