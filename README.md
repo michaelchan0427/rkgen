@@ -1,8 +1,3 @@
-  
-	THIS IS A WIP!
-
-
-
 RKGen 
 =====
 
@@ -26,6 +21,17 @@ I figured I need a tool that would allow me to generate what's required and it
 *SHOULD* be available somewhere on the internet. Unfortunately, despite
 RestKit's large user base, there isn't anything  like that... and this is how
 this project came to life.
+
+
+Features
+--------
+
+1. Generates Objective-C classes from JSON file or HTTP response.
+1. Generates [RestKit](https://github.com/RestKit/RestKit) compatible mapper methods mapping JSON to the generated classes.
+1. Templated code generation approach.
+1. Configurable property type mapping.
+1. Configurable restricted keywords for property name in generated classes.
+
 
 
 How it works  
@@ -125,9 +131,61 @@ Just like other programming languages, a number of keywords are reserved and can
 
 ### Type mapping
 
-...
+RKGen uses the following rules to map json object properties to Objective-C type. We will refer to the example below to explain these rules:
 
-### Known issues
+	{
+		"team":{
+			"creationTime": "2012-08-25T11:04:07+01:00"
+			"name": "The A-Team",
+			"country":"United States"
+			"teamMatchRecords":{
+				"win": "200",
+				"lost": "100",
+				"draw": "2"
+			}
+		},
+		"members":
+		[
+			{
+				"name":"Foo",
+				"email":"foo@bar.com"
+			},
+			{
+				"name":"Bar",
+				"email":"Bar@foo.com"
+			}
+		]
+	}
+
+1. ** One-to-many ** - If the relationship is one-to-many, i.e. the property "members" above, RKGen reads the "array" key in the attributetypes.properties file to populate the Objective-C property type, it is NSMutableArray by default.
+
+1. ** User configured ** - RKGen concatenates the object name with the property name as a key to perform lookup in the attributetypes.properties file to find a mapping, e.g. if we have team.creationTime=NSDate in the properties file, then in the generated Objective-C class for Team, the creationTime property would be of type NSDate. The rule to create the key is the same for nested objects, e.g. teamMatchRecords.win=NSInteger would map the property to NSInteger type.
+
+1. ** Default ** - After the lookup mentioned above, if there isn't a mapping for the property in the attributetypes.properties file, then it would use the key "default" in the properties file. The file distributed with the binary has the key default maps to NSString.
+
+### Mapper generation
+
+Personally I think mapper generation is the most important feature in RKGen. After generating all the Objective-C classes from the JSON, it'd be pretty useless without explicit mappings of objects and properties from the original JSON to the classes. RKGen generates Objective-C singleton class containing all the mapping required, and of course, the mapping only works with RestKit. 
+
+
+Known issues
+------------
 
 1. Singulars and Plurals Class names might not be generated in an optimal way, currently RKGen only capitalises the first letter and removes the trailing 's', so addresses will become Addresse and Address will become Addres. This will not be fixed since this opens up a whole can of worms... 
+
+1. Date format is currently hardcoded in the mapper file.
+
+Contribute
+----------
+
+Just let me know if you wish to contribute. 
+
+
+Unrelated
+---------
+
+First time I use Git and release opensource code on GitHub so Comments & Recommendations welcome!!
+
+
+
 
