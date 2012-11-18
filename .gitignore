@@ -26,3 +26,5 @@ rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/META-INF/maven/com.rkgen/json
 rkgen/output/jsontorestkitgenerator-0.0.1-SNAPSHOT/log4j.properties
 
 rkgen/target/jsontorestkitgenerator-0.0.1-jar-with-dependencies.jar
+rkgen/binary/velocity.log
+rkgen/target/RKGen-0.1.1.jar
