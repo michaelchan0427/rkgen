@@ -127,3 +127,7 @@ Just like other programming languages, a number of keywords are reserved and can
 
 ...
 
+### Known issues
+
+1. Singulars and Plurals Class names might not be generated in an optimal way, currently RKGen only capitalises the first letter and removes the trailing 's', so addresses will become Addresse and Address will become Addres. This will not be fixed since this opens up a whole can of worms... 
+
